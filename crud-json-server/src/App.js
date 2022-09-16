@@ -15,23 +15,75 @@ class App extends React.Component {
       };
     }
 
-    getLists = () => {
+    getLists = (event, id) => {
+      this.setState(
+        {
+          singledata: {
+            title: "Loading...",
+            author: "Loading..."
+          }
+        },  
+    () => {
       fetch("http://localhost:5000/posts")
       .then(res => res.json())
-      .then(result => 
+      .then(result => {
         this.setState({
-          loading: false,
-          alldata: result
+          singledata:{
+            title: result.title,
+            author: result.author ? result.author : ""
+          }
+        });
+    });
+  }
+  );
+}
+    
+    handleChange = (event) => {
+      let title = this.state.singledata.title;
+      let author = this.state.singledata.author;
+      if (event.target.name === "title") title = event.target.value;
+      else author = event.target.value;
+
+      this.setState({
+        singledata:{
+          title: title,
+          author: author
+        }
+      })
+    }
+
+    createList = () => {
+      fetch("http://localhost:5000/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify(this.state.singledata)
+      }).then(
+        this.setState({
+          singledata: {
+            title:"",
+            autho:""
+          }
         })
-      )
-      .catch(console.log);
+      );
+    }
+
+    updateList= (event, id) => {
+      
     }
 
     render(){
       const listTable = this.state.loading ? (
         <span>Loading Data......Please be patience.</span>
       ) : (
-        <Lists alldata={this.state.alldata} />
+        <Lists 
+          alldata={this.state.alldata}
+          singledata={this.state.singledata}
+          getList={this.getLists}
+          updateList={this.updateList}
+          handleChange={this.handleChange}
+          />
       );
   
       return (
@@ -44,7 +96,11 @@ class App extends React.Component {
               >
                 Get Lists
               </button>
-              <CreateList singledata={this.state.singledata} />
+              <CreateList 
+                singledata={this.state.singledata} 
+                handleChange={this.handleChange}
+                createList={this.createList}
+              />
           </span>
           {listTable}
         </div>

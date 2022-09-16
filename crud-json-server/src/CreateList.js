@@ -20,6 +20,7 @@ function CreateList(props) {
                     placeholder="Title"
                     name="title"
                     value={props.singledata.title}
+                    onChange={props.handleChange}
                     className="d-block my-3"
                 />
                 <input
@@ -35,7 +36,13 @@ function CreateList(props) {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleClose}>
+                <Button 
+                    variant="primary" 
+                    onClick={() => {
+                        handleClose();
+                        props.createList();
+                    }}
+                    >
                     Create
                 </Button>
             </Modal.Footer>
