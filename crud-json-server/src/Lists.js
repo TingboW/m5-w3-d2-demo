@@ -21,6 +21,15 @@ function Lists(props){
                         >
                         </UpdateList>
                 </td>
+                <td>
+                    <DeleteList
+                        elementId={element.id}
+                        singledata={props.singledata}
+                        getList={props.getList}
+                        deletList={props.deleteList}
+                        >
+                        </DeleteList>
+                </td>
             </tr>
         )
     })

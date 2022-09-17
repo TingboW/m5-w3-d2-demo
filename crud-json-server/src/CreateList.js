@@ -3,6 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 
 function CreateList(props) {
     const [show, setShow] = useState(false);
+    
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     return (

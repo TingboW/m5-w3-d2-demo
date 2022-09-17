@@ -22,7 +22,7 @@ function DeleteList(props) {
                 <Modal.Header closeButton>
                     <Modal.Title>Delete List</Modal.Title>
                 </Modal.Header>
-                <Model.Body>
+                <Modal.Body>
                     <input 
                         type="text"
                         placeholder="Title"
@@ -42,7 +42,7 @@ function DeleteList(props) {
                     >
                     </input>
 
-                </Model.Body>
+                </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
@@ -51,7 +51,7 @@ function DeleteList(props) {
                         variant="primary"
                         onClick={(event) => {
                             handleClose();
-                            props.deleteLIst(event.props.elementID)
+                            props.deleteList(event, props.elementId)
                         }}
                         >
                             Delete

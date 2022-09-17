@@ -15,7 +15,50 @@ class App extends React.Component {
       };
     }
 
-    getLists = (event, id) => {
+    getLists = () => {
+      fetch('http://localhost:5000/posts')
+        .then((res) => res.json())
+        .then((result) =>
+          this.setState({
+            loading: false,
+            alldata: result,
+          })
+        )
+        .catch(console.log);
+    };
+    
+    handleChange = (event) => {
+      let title = this.state.singledata.title;
+      let author = this.state.singledata.author;
+      if (event.target.name === "title") title = event.target.value;
+      else author = event.target.value;
+
+      this.setState({
+        singledata:{
+          title: title,
+          author: author
+        }
+      });
+    }
+
+    createList = () => {
+      fetch("http://localhost:5000/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify(this.state.singledata)
+      }).then(
+        this.setState({
+          singledata: {
+            title: "",
+            author: ""
+          }
+        })
+      );
+    }
+
+    getList = (event, id) => {
       this.setState(
         {
           singledata: {
@@ -37,40 +80,41 @@ class App extends React.Component {
   }
   );
 }
-    
-    handleChange = (event) => {
-      let title = this.state.singledata.title;
-      let author = this.state.singledata.author;
-      if (event.target.name === "title") title = event.target.value;
-      else author = event.target.value;
 
-      this.setState({
-        singledata:{
-          title: title,
-          author: author
-        }
-      })
-    }
-
-    createList = () => {
-      fetch("http://localhost:5000/posts", {
-        method: "POST",
+   updateList= (event, id) => {
+      fetch("http://localhost:5000/posts" + id, {
+        method: "PUT",
         headers: {
-          "Content-Type": "application/json" 
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(this.state.singledata)
-      }).then(
+      })
+        .then(res => res.json())
+        .then(result => {
+          this.setState({
+            singledata: {
+              title: "",
+              author: ""
+            }
+          });
+          this.getList();
+        });
+    }
+    
+    deleteList = (event, id) => {
+      fetch("http://localhost:5000/posts/" + id, {
+        method: "DELETE"
+      })
+      .then(res => res.json())
+      .then(result => {
         this.setState({
           singledata: {
-            title:"",
-            autho:""
+            title: "",
+            author: ""
           }
-        })
-      );
-    }
-
-    updateList= (event, id) => {
-      
+        });
+        this.getLists();
+      })
     }
 
     render(){
@@ -80,8 +124,9 @@ class App extends React.Component {
         <Lists 
           alldata={this.state.alldata}
           singledata={this.state.singledata}
-          getList={this.getLists}
+          getList={this.getList}
           updateList={this.updateList}
+          deleteList={this.deleteList}
           handleChange={this.handleChange}
           />
       );
